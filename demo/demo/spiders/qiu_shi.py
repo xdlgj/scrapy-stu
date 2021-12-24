@@ -5,7 +5,8 @@ from demo.items import DemoItem
 
 class QiuShiSpider(scrapy.Spider):
     name = 'qiu_shi'
-    start_urls = ['https://www.qiushibaike.com/text/']
+    start_urls = ['https://www.qiushibaike.com/text']
+    prefix_url = 'https://www.qiushibaike.com'
 
     def parse(self, response):
         divs = response.xpath("//div[contains(@id, 'qiushi_tag')]")
@@ -16,3 +17,7 @@ class QiuShiSpider(scrapy.Spider):
             item['auth'] = auth
             item['content'] = content
             yield item
+        next_uri = response.xpath("//ul[@class='pagination']/li[last()]/a/@href")
+        if next_uri:  # 存在下一页则继续爬取
+            yield scrapy.Request(f"{self.prefix_url}{next_uri.extract_first()}")
+
