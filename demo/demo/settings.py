@@ -64,8 +64,9 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'demo.pipelines.JsonWriterPipeline': 300,
-    'demo.pipelines.MongoPipeline': 301,
+    # 'demo.pipelines.JsonWriterPipeline': 300,
+    # 'demo.pipelines.MongoPipeline': 301,
+    'scrapy.pipelines.images.ImagesPipeline': 1,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -92,3 +93,5 @@ ITEM_PIPELINES = {
 LOG_LEVEL = 'ERROR'
 MONGO_URI = 'mongodb://xdl:xdl123@127.0.0.1:27017'
 MONGO_DATABASE = 'scrapy'
+
+IMAGES_STORE = 'images'
