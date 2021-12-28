@@ -73,7 +73,7 @@ ITEM_PIPELINES = {
 }
 ```
 ## 数据解析
-```
+```python
 import scrapy
 
 from demo.items import DemoItem
@@ -132,4 +132,52 @@ ITEM_PIPELINES = {
 }
 ...
 IMAGES_STORE = 'images' #  图片存储位置 
+```
+# 爬取动态加载的数据
+## selenium环境搭建
+1. 安装selenium：```pip install selenium```
+2. 安装[Install browser drivers](https://www.selenium.dev/documentation/webdriver/getting_started/install_drivers/)
+下载自己浏览器对应的版本，并设置为环境变量
+3. 验证代码
+```python
+from selenium import webdriver
+
+driver = webdriver.Chrome()
+
+driver.get("https://news.163.com/domestic/")
+```
+## 使用下载中间件篡改返回数据
+* 修改配置文件，启动下载中间件
+```python
+# Enable or disable downloader middlewares
+# See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
+DOWNLOADER_MIDDLEWARES = {
+   'demo.middlewares.DemoDownloaderMiddleware': 543,
+}
+```
+* 编写response中间件
+```python
+from scrapy.http import HtmlResponse
+class DemoDownloaderMiddleware:
+    # Not all methods need to be defined. If a method is not defined,
+    # scrapy acts as if the downloader middleware does not modify the
+    # passed objects.
+    def process_response(self, request, response, spider):
+        # Called with the response returned from the downloader.
+
+        # Must either;
+        # - return a Response object
+        # - return a Request object
+        # - or raise IgnoreRequest
+        if request.url in spider.start_urls:
+            # 获取动态加载的新闻数据
+            spider.driver.get(request.url)
+            html = spider.driver.page_source  # 包含新闻数据的html页面
+            return HtmlResponse(url=request.url, body=html, encoding='utf-8')
+        return response
+```
+* 请求传参，将一个解析函数中的对象传递到下一个解析函数中
+```
+第一个解析函数：scrapy.Request(detail_url, callback=self.parse_detail, meta={'item': item})
+第二个解析函数：response.meta['item']
 ```

@@ -4,6 +4,7 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+from scrapy.http import HtmlResponse
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
@@ -87,6 +88,11 @@ class DemoDownloaderMiddleware:
         # - return a Response object
         # - return a Request object
         # - or raise IgnoreRequest
+        if request.url in spider.start_urls:
+            # 获取动态加载的新闻数据
+            spider.driver.get(request.url)
+            html = spider.driver.page_source  # 包含新闻数据的html页面
+            return HtmlResponse(url=request.url, body=html, encoding='utf-8')
         return response
 
     def process_exception(self, request, exception, spider):

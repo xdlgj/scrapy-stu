@@ -51,9 +51,9 @@ ROBOTSTXT_OBEY = False
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'demo.middlewares.DemoDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+   'demo.middlewares.DemoDownloaderMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
@@ -64,9 +64,9 @@ ROBOTSTXT_OBEY = False
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    # 'demo.pipelines.JsonWriterPipeline': 300,
+    'demo.pipelines.JsonWriterPipeline': 300,
     # 'demo.pipelines.MongoPipeline': 301,
-    'scrapy.pipelines.images.ImagesPipeline': 1,
+    # 'scrapy.pipelines.images.ImagesPipeline': 1,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
